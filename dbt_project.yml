@@ -1,0 +1,25 @@
+name: 'snowflake_airow_dbt'
+version: '1.0.0'
+config-version: 2
+profile: 'default'
+
+model-paths: ["src/dbt/models"]
+seed-paths: ["src/dbt/seeds"]
+test-paths: ["src/dbt/tests"]
+macro-paths: ["src/dbt/macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  snowflake_airflow_dbt:
+    transform:
+      +schema: transform
+      +materialized: view
+      +enabled: true
+    analysis:
+      +schema: analysis
+      +materialized: view
+      +enabled: true

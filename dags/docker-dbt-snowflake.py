@@ -1,10 +1,14 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timedelta
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 
 default_args = {
     "owner": "Wallace Camargo",
     "depends_on_past": False,
+    "retries": 2,
+    "retry_delay": timedelta(minutes=1),
+    "retries": 2,
+    "retry_delay": timedelta(minutes=1),
 }
 
 with DAG(
@@ -22,9 +26,9 @@ with DAG(
         container_name="transform",
         api_version="auto",
         auto_remove=True,
-        command="dbt run --models transform --profiles-dir .", 
+        command="run --models transform --profiles-dir .", 
         docker_url="tcp://docker-proxy:2375",
-        network_mode="airflow_default",
+        network_mode="dbt-snowflake-airflow_airflow_default",
         mount_tmp_dir=False,
     )
     
@@ -34,9 +38,9 @@ with DAG(
         container_name="analysis",  
         api_version="auto",
         auto_remove=True,
-        command="dbt run --models analysis --profiles-dir .",  
+        command="run --models analysis --profiles-dir .",  
         docker_url="tcp://docker-proxy:2375",
-        network_mode="airflow_default",
+        network_mode="dbt-snowflake-airflow_airflow_default",
         mount_tmp_dir=False, 
     )
 
